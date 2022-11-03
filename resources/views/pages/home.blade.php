@@ -8,7 +8,7 @@
         <div class="col-lg-6 mx-auto">
             <p class="lead mb-4">Retrouvez-ici nos dernières actualités !</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <a class="btn btn-primary btn-lg px-4 gap-3" href="#news">Accédez aux actualités</a>
+                <a class="btn btn-primary btn-lg px-4 gap-3" href="/posts">Accédez aux actualités</a>
             </div>
         </div>
     </div>
@@ -27,7 +27,17 @@
                         <small class="opacity-50 text-nowrap">{{$post->created_at}}</small>
                     </div>
                 </a>
+                {{-- <a href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <div>
+                            <h6 class="mb-0">{{$post->title}}</h6>
+                            <p class="mb-0 opacity-75">{{$post->description}}</p>
+                        </div>
+                        <small class="opacity-50 text-nowrap">{{$post->created_at}}</small>
+                    </div>
+                </a> --}}
             @endforeach
         </div>
     @endif
+    
 @endsection
