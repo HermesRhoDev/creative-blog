@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', fn() => view('welcome'));
+
+Route::get('/hello-creative', fn() => view('hello-creative'));
+
+Route::get('/', [PageController::class, 'home']);
+
+Route::get('/posts', [AdminPostController::class, 'index'])->name('posts.index');
+Route::get('/posts/create', [AdminPostController::class, 'create'])->name('posts.create');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+require __DIR__.'/auth.php';
