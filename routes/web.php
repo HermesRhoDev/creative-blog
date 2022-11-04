@@ -3,6 +3,7 @@
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,10 @@ Route::get('/', [PageController::class, 'home']);
 Route::get('/posts/show/{id}-{slug}', [AdminPostController::class, 'show'])->name('posts.show');
 
 Route::group(['middleware' => 'auth', 'prefix'=> 'admin'], function () { 
+    //************************** */ CATEGORIES PART \* ******************************** \\
+    Route::get('categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+
+    //************************** */ POSTS PART \* ******************************** \\
     Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');
     Route::get('posts/create', [AdminPostController::class, 'create'])->name('posts.create');
     Route::get('posts/{post}/edit', [AdminPostController::class, 'edit'])->name('posts.edit');
