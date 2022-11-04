@@ -10,7 +10,5 @@ class PageController extends Controller
         $posts = Post::latest()->get();
 
         return view('pages.home', ['posts' => $posts]);
-
-        // return view('pages.home', ['posts' => collect()]);
     }
 }

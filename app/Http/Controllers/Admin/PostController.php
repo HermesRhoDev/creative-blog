@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -37,12 +38,13 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         $post = new Post;
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, '-');
         $post->description = $request->description;
+        $post->isPublished = isset($request->isPublished) ? 1 : 0;
         $post->save();
 
         session()->flash('success', "L'article a nie, été enregistré");
@@ -56,9 +58,13 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($slug, $id)
+    public function show(Request $request)
     {
-        $post = Post::find($id);
+        $post = Post::query()
+            ->where('id', $request->id)
+            ->where('slug', $request->slug)
+            ->firstOrFail();
+            
         return view("pages.article", compact("post"));
     }
 
@@ -68,9 +74,8 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        $post = Post::find($id);
         return view("admin.posts.create", compact("post"));
     }
 
@@ -81,13 +86,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
         $update = Post::find($id);
 
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
+        $update->isPublished = isset($request->isPublished) ? 1 : 0;
         $update->save();
 
         session()->flash('success', "L'article a bien été modifié");
