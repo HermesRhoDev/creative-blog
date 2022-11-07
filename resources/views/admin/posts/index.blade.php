@@ -15,6 +15,7 @@
                 <div class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{$post->title}}</h5>
+                        <img src="../images/thumbnail/{{$post->image_file_name}}" alt="">
                         <div class="d-flex gap-3 align-items-center">
                             <small class="bg-info text-white p-2 rounded-3 fw-semibold">{{$post->created_at->format('d/m/Y')}}</small>
                             @if ($post->isPublished === 1)

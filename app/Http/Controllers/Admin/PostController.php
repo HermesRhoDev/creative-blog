@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Image;
 
 class PostController extends Controller
 {
@@ -43,10 +44,31 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
+
+        // dd($request->image_file_name);
         $post = new Post;
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, '-');
         $post->description = $request->description;
+        if ($request->hasFile('image_file_name')) {
+            $file = $request->file('image_file_name');
+            $file_name = Str::uuid() . '.' . $file->getClientOriginalName();
+
+            $destinationPathThumbnail = public_path('images/thumbnail');
+            $image_thumbnail = Image::make($file->getPathname());
+            $image_thumbnail->resize(150, 150, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathThumbnail . '/' . $file_name);
+
+            $destinationPathMedium = public_path('images/medium');
+            $image_medium = Image::make($file->getPathname());
+            $image_medium->resize(300, 300, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathMedium . '/' . $file_name);
+
+            $file->move(public_path('images'), $file_name);
+            $post->image_file_name = $file_name;
+        }
         $post->category_id = $request->category_id;
         $post->isPublished = isset($request->isPublished) ? 1 : 0;
         $post->save();
@@ -68,7 +90,7 @@ class PostController extends Controller
             ->where('id', $request->id)
             ->where('slug', $request->slug)
             ->firstOrFail();
-            
+
         return view("pages.article", compact("post"));
     }
 
@@ -123,4 +145,5 @@ class PostController extends Controller
 
         return redirect()->route('posts.index');
     }
+    // LARAVEL ELOQUENT DESTROY ALL TRUNCATE TO DO
 }
