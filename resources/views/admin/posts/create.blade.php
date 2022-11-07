@@ -27,6 +27,25 @@
             <textarea name="description" class="form-control" id="description" rows="3">{{isset($post->description) ? $post->description : old('description')}}</textarea>
         </div>
         <div class="mb-3">
+            <label for="category_id" class="form-label">
+                Catégorie
+            </label>
+            <select class="form-select" name="category_id" aria-label="Default select example">
+                <option value="">Aucune</option>
+                @foreach ($categories as $category)
+                    <option value="{{$category->id}}" 
+                        {{-- LARAVEL COLLECTIVE A VERIFIER --}}
+                        @if(
+                            (isset($post) && $category->id == old('category_id', $post->category_id)) ||
+                            $category->id == old('category_id')
+                        )
+                            selected
+                        @endif
+                        >{{isset($category->title) ? $category->title : old('title')}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mb-3">
             <input class="form-check-input" type="checkbox" name="isPublished" id="flexCheckDefault" {{isset($post->isPublished) && $post->isPublished ? "checked" : ""}}>
             <label class="form-check-label" for="flexCheckDefault">
               Publié

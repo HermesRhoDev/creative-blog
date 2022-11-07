@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -29,7 +30,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -44,6 +47,7 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, '-');
         $post->description = $request->description;
+        $post->category_id = $request->category_id;
         $post->isPublished = isset($request->isPublished) ? 1 : 0;
         $post->save();
 
@@ -76,7 +80,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view("admin.posts.create", compact("post"));
+        $categories = Category::all();
+
+        return view("admin.posts.create", compact("post", "categories"));
     }
 
     /**
@@ -93,6 +99,7 @@ class PostController extends Controller
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
+        $update->category_id = $request->get('category_id');
         $update->isPublished = isset($request->isPublished) ? 1 : 0;
         $update->save();
 
