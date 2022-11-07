@@ -20,8 +20,16 @@ Route::get('/', [PageController::class, 'home']);
 Route::get('/posts/show/{id}-{slug}', [AdminPostController::class, 'show'])->name('posts.show');
 
 Route::group(['middleware' => 'auth', 'prefix'=> 'admin'], function () { 
+    //************************** */ MENU DASHBOARD \* ******************************** \\
+    Route::get('/', fn () => view('dashboard'))->name('dashboard');
+
     //************************** */ CATEGORIES PART \* ******************************** \\
     Route::get('categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+    Route::get('categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');
+    Route::post('categories/store', [AdminCategoryController::class, 'store'])->name('categories.store');
+    Route::get('categories/{category}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
+    Route::post('categories/destroy/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::put('categories/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
 
     //************************** */ POSTS PART \* ******************************** \\
     Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');

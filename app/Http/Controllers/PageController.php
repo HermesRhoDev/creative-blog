@@ -7,7 +7,7 @@ use App\Models\Post;
 class PageController extends Controller
 {
     public function home() {
-        $posts = Post::latest()->get();
+        $posts = Post::where('isPublished', true)->latest()->get();
 
         return view('pages.home', ['posts' => $posts]);
     }

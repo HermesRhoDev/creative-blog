@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -36,9 +37,15 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $category = new Category;
+        $category->title = $request->title;
+        $category->save();
+
+        session()->flash('success', "La catégorie a bien été ajouté !");
+
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -58,9 +65,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        return view("admin.categories.create", compact("category"));
     }
 
     /**
@@ -70,9 +77,16 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
-        //
+        $update = Category::find($id);
+
+        $update->title = $request->get('title');
+        $update->save();
+
+        session()->flash('success', "La catégorie a bien été modifié");
+
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -83,6 +97,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = Category::where('id', $id);
+        $category->delete();
+
+        session()->flash('success', "La catégorie a bien, été supprimé");
+
+        return redirect()->route('categories.index');
     }
 }

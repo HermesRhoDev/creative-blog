@@ -22,7 +22,7 @@
                 @if (Route::has('login'))
                     @auth
                         <li class="nav-item">
-                            <a href="{{ url('/admin/posts') }}" class="nav-link">Dashboard</a>
+                            <a href="{{ url('/admin/') }}" class="nav-link">Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
@@ -30,7 +30,7 @@
                                     <a class="nav-link" href="route('logout')"
                                             onclick="event.preventDefault();
                                                         this.closest('form').submit();">
-                                        {{ __('Log Out') }}
+                                        Déconnexion
                                     </a>                                
                             </form>
                         </li>

@@ -35,7 +35,7 @@
                 </div>
             @endforeach
             @else
-                <h1>AUCUN ARTICLE ACCTUELLEMENT</h1>
+                <h1>AUCUN ARTICLE ACTUELLEMENT</h1>
         </div>
     @endif
 

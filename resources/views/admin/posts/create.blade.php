@@ -12,7 +12,7 @@
     <form method="POST" action="{{isset($post->id) ? route('posts.update', $post->id) : route('posts.store')}}">
         @csrf
 
-        @if (isset($post->id))
+        @if(isset($post->id))
             @method('PUT')
             @else
                 @method('POST')
