@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -54,9 +55,18 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $posts = Post::with('category')
+            ->latest()
+            ->where('category_id', $request->id)
+            ->where('isPublished', true)
+            ->get();
+
+        $categories = Category::latest()
+            ->get();
+    
+            return view('pages.home', compact("posts","categories"));
     }
 
     /**

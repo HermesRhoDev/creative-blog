@@ -27,7 +27,15 @@
             <textarea name="description" class="form-control" id="description" rows="3">{{isset($post->description) ? $post->description : old('description')}}</textarea>
         </div>
         <div class="mb-3">
-            <input type="file" name="image_file_name">
+            <input type="file" name="image_file_name" id="image_file_name">
+            <img id="thumb" src="" width="150px"/>
+        </div>
+        <div class="mb-3">
+            <select class="custom-select" name="tags[]" multiple>
+                @foreach ($tags as $tag)
+                    <option value="{{$tag->id}}">{{$tag->title}}</option>
+                @endforeach
+            </select>
         </div>
         <div class="mb-3">
             <label for="category_id" class="form-label">

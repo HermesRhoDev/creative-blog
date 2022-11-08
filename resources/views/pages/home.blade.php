@@ -12,25 +12,47 @@
 
     @if(!$posts->isEmpty())
         <h1 class="mb-4">Les derniers articles : </h1>
-        ​
-        <div class="list-group w-auto mb-4">
-            @foreach ($posts as $post)
-                <a href="{{route('posts.show', ['id' => $post->id, 'slug' => $post->slug])}}" class="list-group-item list-group-item-action d-flex gap-3 py-3">
-                    <div class="d-flex flex-column">
-                        @if(isset($post->category) != null)
-                            <p>{{$post->category->title}}</p>
-                        @endif
-                        <div class="d-flex gap-2 justify-content-between">
-                            <div>
-                                <h6 class="mb-0">{{$post->title}}</h6>
-                                <p class="mb-0 opacity-75">{{$post->description}}</p>
-                            </div>
-                            <small class="opacity-50 text-nowrap">{{$post->created_at}}</small>
-                        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-8">
+                    <div class="list-group w-auto mb-4">
+                        @foreach ($posts as $post)
+                            <a href="{{route('posts.show', ['id' => $post->id, 'slug' => $post->slug])}}" class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                                <div class="d-flex flex-column">
+                                    @if(isset($post->category) != null)
+                                        <p>{{$post->category->title}}</p>
+                                    @endif
+                                    <div class="d-flex gap-2 justify-content-between">
+                                        <div>
+                                            <h6 class="mb-0">{{$post->title}}</h6>
+                                            <p class="mb-0 opacity-75">{{$post->description}}</p>
+                                        </div>
+                                        <small class="opacity-50 text-nowrap">{{$post->created_at}}</small>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
                     </div>
-                </a>
-            @endforeach
-        </div>
+                </div>
+                <div class="col-4">
+                    <div>
+                        @if (isset($categories))
+                            @foreach ($categories as $category)
+                                <a href="/category/{{$category->id}}">{{$category->title}}</a>
+                            @endforeach
+                        @endif
+                    </div>
+                    <div>
+                        @if (isset($tags))
+                            @foreach ($tags as $tag)
+                                <a href="/tag/{{$tag->id}}">{{$tag->title}}</a>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>​
     @endif
     
 @endsection

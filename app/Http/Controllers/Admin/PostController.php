@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -33,8 +34,9 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
 
-        return view('admin.posts.create', compact('categories'));
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -67,10 +69,15 @@ class PostController extends Controller
 
             $file->move(public_path('images'), $file_name);
             $post->image_file_name = $file_name;
-        }
+        }        
         $post->category_id = $request->category_id;
         $post->isPublished = isset($request->isPublished) ? 1 : 0;
+
         $post->save();
+        // dd($post);
+        if(isset($request->tags)){
+            $post->tags()->attach($request->tags);
+        }
 
         session()->flash('success', "L'article a nie, été enregistré");
 
@@ -120,7 +127,13 @@ class PostController extends Controller
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
-        if($update->image_file_name != null){
+        if(isset($request->image_file_name)){
+            if($update->image_file_name != null) {
+                File::delete(public_path('images/' . $update->image_file_name));
+                File::delete(public_path('images/thumbnail/' . $update->image_file_name));
+                File::delete(public_path('images/medium/' . $update->image_file_name));
+            }
+
             $file = $request->file('image_file_name');
             $file_name = Str::uuid() . '.' . $file->getClientOriginalName();
 
@@ -136,12 +149,11 @@ class PostController extends Controller
                 $constraint->aspectRatio();
             })->save($destinationPathMedium . '/' . $file_name);
 
-            // File::delete(public_path('images/' . $update->get('image_file_name')));
-            // File::delete(public_path('images/thumbnail/' . $update->get('image_file_name')));
-            // File::delete(public_path('images/medium/' . $update->get('image_file_name')));
-
             $file->move(public_path('images'), $file_name);
             $update->image_file_name = $file_name;
+        }
+        if(isset($request->tags)){
+            $update->tags()->sync($request->tags);
         }
         $update->category_id = $request->get('category_id');
         $update->isPublished = isset($request->isPublished) ? 1 : 0;

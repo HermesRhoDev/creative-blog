@@ -4,6 +4,7 @@ use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\TagController as AdminTagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,8 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 Route::get('/', [PageController::class, 'home']);
 Route::get('/posts/show/{id}-{slug}', [AdminPostController::class, 'show'])->name('posts.show');
+Route::get('/category/{id}', [AdminCategoryController::class, 'show'])->name('category.show');
+Route::get('/tag/{id}', [AdminTagController::class, 'show'])->name('tag.show');
 
 Route::group(['middleware' => 'auth', 'prefix'=> 'admin'], function () { 
     //************************** */ MENU DASHBOARD \* ******************************** \\
@@ -30,6 +33,14 @@ Route::group(['middleware' => 'auth', 'prefix'=> 'admin'], function () {
     Route::get('categories/{category}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
     Route::post('categories/destroy/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
     Route::put('categories/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
+
+    //************************** */ TAGS PART \* ******************************** \\
+    Route::get('tags', [AdminTagController::class, 'index'])->name('tags.index');
+    Route::get('tags/create', [AdminTagController::class, 'create'])->name('tags.create');
+    Route::post('tags/store', [AdminTagController::class, 'store'])->name('tags.store');
+    Route::get('tags/{tag}/edit', [AdminTagController::class, 'edit'])->name('tags.edit');
+    Route::post('tags/destroy/{id}', [AdminTagController::class, 'destroy'])->name('tags.destroy');
+    Route::put('tags/{id}', [AdminTagController::class, 'update'])->name('tags.update');
 
     //************************** */ POSTS PART \* ******************************** \\
     Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');
