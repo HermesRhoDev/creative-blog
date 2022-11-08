@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Image;
@@ -44,8 +45,6 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-
-        // dd($request->image_file_name);
         $post = new Post;
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, '-');
@@ -121,6 +120,29 @@ class PostController extends Controller
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
+        if($update->image_file_name != null){
+            $file = $request->file('image_file_name');
+            $file_name = Str::uuid() . '.' . $file->getClientOriginalName();
+
+            $destinationPathThumbnail = public_path('images/thumbnail');
+            $image_thumbnail = Image::make($file->getPathname());
+            $image_thumbnail->resize(150, 150, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathThumbnail . '/' . $file_name);
+
+            $destinationPathMedium = public_path('images/medium');
+            $image_medium = Image::make($file->getPathname());
+            $image_medium->resize(300, 300, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathMedium . '/' . $file_name);
+
+            // File::delete(public_path('images/' . $update->get('image_file_name')));
+            // File::delete(public_path('images/thumbnail/' . $update->get('image_file_name')));
+            // File::delete(public_path('images/medium/' . $update->get('image_file_name')));
+
+            $file->move(public_path('images'), $file_name);
+            $update->image_file_name = $file_name;
+        }
         $update->category_id = $request->get('category_id');
         $update->isPublished = isset($request->isPublished) ? 1 : 0;
         $update->save();
@@ -138,7 +160,14 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::where('id', $id);
+        $post = Post::where('id', $id)->first();
+
+        if($post->image_file_name != null){
+            File::delete(public_path('images/' . $post->image_file_name));
+            File::delete(public_path('images/thumbnail/' . $post->image_file_name));
+            File::delete(public_path('images/medium/' . $post->image_file_name));
+        }
+
         $post->delete();
 
         session()->flash('success', "L'article a bien, été supprimé");
@@ -146,4 +175,28 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
     // LARAVEL ELOQUENT DESTROY ALL TRUNCATE TO DO
+    public function truncate()
+    {
+        $array_full = [];
+        $array_thumbnail = [];
+        $array_medium = [];
+
+        $posts = Post::all();
+
+        foreach($posts as $post){
+            $array_full[] = public_path('images/' . $post->image_file_name);
+            $array_thumbnail[] = public_path('images/thumbnail/' . $post->image_file_name);
+            $array_medium[] = public_path('images/medium/' . $post->image_file_name);
+        }
+
+        File::delete($array_full);
+        File::delete($array_thumbnail);
+        File::delete($array_medium);
+
+        Post::truncate();
+
+        session()->flash('success', "L'ensemble des articles a été correctement supprimé !");
+
+        return redirect()->route('posts.index');
+    }
 }

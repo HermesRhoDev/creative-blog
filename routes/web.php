@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth', 'prefix'=> 'admin'], function () {
     Route::post('posts/store', [AdminPostController::class, 'store'])->name('posts.store');
     Route::post('posts/destroy/{id}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
     Route::put('posts/{id}', [AdminPostController::class, 'update'])->name('posts.update');
+    Route::post('posts/truncate', [AdminPostController::class, 'truncate'])->name('posts.truncate');
 });
 
 // Route::group(['middleware' => 'auth', 'prefix'=> 'admin', 'as' => 'admin.'], function () { 

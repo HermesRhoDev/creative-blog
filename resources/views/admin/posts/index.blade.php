@@ -2,12 +2,19 @@
 
 @section('content')
     @if(Session::has('success')) 
-        <div class="alert alert-success">
+        <div id="alert" class="alert alert-success">
             {{ Session::get('success') }}
         </div>
     @endif
 
     <a class="btn btn-info text-white fw-semibold text-uppercase btn-block mb-3" href="posts/create">Ajouter un article</a>
+
+    @if(!$posts->isEmpty() && $posts->count() >= 2)   
+        <form action="{{route('posts.truncate')}}" method="POST" class="mb-3">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-block" onclick="if(!confirm('Voulez-vous vraiment supprimer tous les articles ?')) {return false;}">Supprimer tous les articles</button>
+        </form>
+    @endif
 
     @if(!$posts->isEmpty())
         <div class="list-group">
