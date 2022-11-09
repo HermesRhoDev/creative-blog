@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
-use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Models\Tag;
 
 class CategoryController extends Controller
 {
@@ -55,18 +54,20 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(Category $category)
     {
-        $posts = Post::with('category')
-            ->latest()
-            ->where('category_id', $request->id)
+        $posts = $category
+            ->posts()
+            ->with(['category', 'tags'])
             ->where('isPublished', true)
+            ->latest()
             ->get();
 
-        $categories = Category::latest()
-            ->get();
+        $categories = Category::query()->orderBy('title', 'asc')->get();
+
+        $tags = Tag::query()->orderBy('title', 'asc')->get();
     
-            return view('pages.home', compact("posts","categories"));
+        return view('pages.home', compact("posts","categories","tags"));
     }
 
     /**

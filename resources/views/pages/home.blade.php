@@ -52,7 +52,11 @@
                     </div>
                 </div>
             </div>
-        </div>​
+        </div>
+        @else
+            <div class="w-100 text-center">
+                <h1 class="">Il n'y a actuellement auncun article disponible</h1>
+            </div>​
     @endif
     
 @endsection

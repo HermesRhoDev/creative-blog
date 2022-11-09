@@ -21,7 +21,10 @@
             @foreach ($posts as $post)
                 <div class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{$post->title}}</h5>
+                        <h5 class="mb-1">Titre: {{$post->title}}</h5>
+                        @foreach ($post->tags as $tag)
+                            <p>{{$tag->title}}</p>
+                        @endforeach
                         @if(isset($post->image_file_name))
                             <img src="../images/thumbnail/{{$post->image_file_name}}" alt="">
                         @endif

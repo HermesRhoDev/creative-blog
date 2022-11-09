@@ -19,8 +19,8 @@ use App\Http\Controllers\Admin\TagController as AdminTagController;
 
 Route::get('/', [PageController::class, 'home']);
 Route::get('/posts/show/{id}-{slug}', [AdminPostController::class, 'show'])->name('posts.show');
-Route::get('/category/{id}', [AdminCategoryController::class, 'show'])->name('category.show');
-Route::get('/tag/{id}', [AdminTagController::class, 'show'])->name('tag.show');
+Route::get('/category/{category}', [AdminCategoryController::class, 'show'])->name('category.show');
+Route::get('/tag/{tag}', [AdminTagController::class, 'show'])->name('tag.show');
 
 Route::group(['middleware' => 'auth', 'prefix'=> 'admin'], function () { 
     //************************** */ MENU DASHBOARD \* ******************************** \\
@@ -51,9 +51,5 @@ Route::group(['middleware' => 'auth', 'prefix'=> 'admin'], function () {
     Route::put('posts/{id}', [AdminPostController::class, 'update'])->name('posts.update');
     Route::post('posts/truncate', [AdminPostController::class, 'truncate'])->name('posts.truncate');
 });
-
-// Route::group(['middleware' => 'auth', 'prefix'=> 'admin', 'as' => 'admin.'], function () { 
-//     Route::get('/', fn () => view('dashboard'))->name('dashboard');
-// });
 
 require __DIR__.'/auth.php';

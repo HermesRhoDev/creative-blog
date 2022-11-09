@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TagRequest;
+use App\Models\Category;
+use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -54,9 +56,21 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Tag $tag)
     {
-        //
+        // dd($tag);
+        $posts = $tag
+            ->posts()
+            ->with(['category', 'tags'])
+            ->where('isPublished', true)
+            ->latest()
+            ->get();
+
+        $categories = Category::query()->orderBy('title', 'asc')->get();
+
+        $tags = Tag::query()->orderBy('title', 'asc')->get();
+
+        return view('pages.home', compact("posts","tags","categories"));
     }
 
     /**

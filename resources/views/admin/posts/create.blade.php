@@ -30,13 +30,23 @@
             <input type="file" name="image_file_name" id="image_file_name">
             <img id="thumb" src="" width="150px"/>
         </div>
-        <div class="mb-3">
-            <select class="custom-select" name="tags[]" multiple>
-                @foreach ($tags as $tag)
-                    <option value="{{$tag->id}}">{{$tag->title}}</option>
-                @endforeach
-            </select>
-        </div>
+        @if(!$tags->isEmpty())
+            <div class="mb-3">
+                <select name="tags[]" multiple>
+                    @foreach ($tags as $tag)
+                        <option value="{{$tag->id}}" 
+                            @if(
+                                (isset($post) && in_array($tag->id, old('tags', $post->tags->pluck('id')->toArray())))
+                                || (in_array($tag->id, old('tags', [])))
+                                )
+
+                                selected
+                            @endif
+                        >{{isset($tag->title) ? $tag->title : old('title')}}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
         <div class="mb-3">
             <label for="category_id" class="form-label">
                 Catégorie

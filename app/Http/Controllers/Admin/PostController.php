@@ -7,6 +7,7 @@ use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use DB;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest()->get();
+        $posts = Post::with('category', 'tags')->latest()->get();
 
         return view('admin.posts.index', ['posts' => $posts]);
     }
@@ -74,7 +75,7 @@ class PostController extends Controller
         $post->isPublished = isset($request->isPublished) ? 1 : 0;
 
         $post->save();
-        // dd($post);
+
         if(isset($request->tags)){
             $post->tags()->attach($request->tags);
         }
@@ -110,7 +111,9 @@ class PostController extends Controller
     {
         $categories = Category::all();
 
-        return view("admin.posts.create", compact("post", "categories"));
+        $tags = Tag::all();
+
+        return view("admin.posts.create", compact("post", "categories", "tags"));
     }
 
     /**
@@ -205,7 +208,11 @@ class PostController extends Controller
         File::delete($array_thumbnail);
         File::delete($array_medium);
 
+        $posts->map->delete();
+
+        DB::statement("SET foreign_key_checks=0");
         Post::truncate();
+        DB::statement("SET foreign_key_checks=1");
 
         session()->flash('success', "L'ensemble des articles a été correctement supprimé !");
 
