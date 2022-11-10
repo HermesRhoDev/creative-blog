@@ -35,18 +35,20 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="col-4">
-                    <div>
+                <div class="col-4 d-flex flex-column gap-5">
+                    <div class="d-flex flex-column gap-2">
+                        <h3>Catégories</h3>
                         @if (isset($categories))
                             @foreach ($categories as $category)
-                                <a href="/category/{{$category->id}}">{{$category->title}}</a>
+                                <a href="/category/{{$category->id}}" class="btn btn-primary">{{$category->title}}</a>
                             @endforeach
                         @endif
                     </div>
-                    <div>
+                    <div class="d-flex flex-column gap-2">
+                        <h3>Tags</h3>
                         @if (isset($tags))
                             @foreach ($tags as $tag)
-                                <a href="/tag/{{$tag->id}}">{{$tag->title}}</a>
+                                <a href="/tag/{{$tag->id}}" class="btn btn-primary">{{$tag->title}}</a>
                             @endforeach
                         @endif
                     </div>

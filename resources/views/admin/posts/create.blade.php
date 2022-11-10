@@ -8,7 +8,7 @@
         </p>
         @endforeach
     @endif
-
+    
     <form method="POST" action="{{isset($post->id) ? route('posts.update', $post->id) : route('posts.store')}}" enctype="multipart/form-data">
         @csrf
 

@@ -22,9 +22,6 @@
                 <div class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">Titre: {{$post->title}}</h5>
-                        @foreach ($post->tags as $tag)
-                            <p>{{$tag->title}}</p>
-                        @endforeach
                         @if(isset($post->image_file_name))
                             <img src="../images/thumbnail/{{$post->image_file_name}}" alt="">
                         @endif
@@ -37,13 +34,19 @@
                             @endif
                         </div>
                     </div>
-                    <p class="mb-1">{{$post->description}}</p>
+                    <p class="mb-1 truncate overflow-hidden white-space-now-wrap">{{$post->description}}</p>
                     <div class="d-flex gap-3 justify-content-end">
                         <a class="btn btn-warning btn-block" href="{{route('posts.edit', $post->id)}}"><i class="bi bi-pencil text-white"></i></a>
                         <form action="{{route('posts.destroy', ['id' => $post->id])}}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-danger btn-block" onclick="if(!confirm('Voulez-vous vraiment supprimer cet article ?')) {return false;}">X</button>
                         </form>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <h4>Tags:</h4>
+                        @foreach ($post->tags as $tag)
+                            <p class="tag">{{$tag->title}}</p>
+                        @endforeach
                     </div>
                 </div>
             @endforeach
